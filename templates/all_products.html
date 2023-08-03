@@ -79,7 +79,7 @@
     </style>
 </head>
 <body>
-    <h1>All Products</h1>
+    <h1>All Products</h1> {{user.name}}
     <form method="GET" action="/all_products">
         <label for="category">Select Category:</label>
         <select name="category" id="category">
@@ -90,6 +90,7 @@
         </select>
         <input type="submit" value="Filter">
     </form>
+    <a href="/view_cart/{{user.id}}">View Cart</a>
     <hr>
     <ul>
         {% for product in products %}
@@ -98,13 +99,16 @@
             Price: ${{ product.price }}<br>
             Manufacture Date: {{ product.manufacture_date }}<br>
             Expiry Date: {{ product.expiry_date }}<br>
-            Quantity: {{ product.quantity }}<br>
+            Quantity available in stock: {{ product.quantity }}<br>
             Category: {{ product.category.name }}<br>
             {% if product.image_link %}
             <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100">
             {% endif %}
+            <a href="/add_to_cart/{{user.id}}/{{product.id}}">Add to Cart</a>
+
             <br>
             <hr>
+            
         </li>
         {% endfor %}
     </ul>

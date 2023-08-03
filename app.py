@@ -118,11 +118,35 @@ def add_category():
 
     return render_template('add_category.html')
 
+@app.route("/add_to_cart/<user_id>/<product_id>",methods=["GET","POST"])
+@login_required
+def add_to_cart(user_id,product_id):
+    prod=Product.query.filter_by(id=product_id).first()
+    if request.method=="POST":
+        citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
+        if not citem:
+            cart=CartItem(user_id=user_id, product_id=product_id, quantity=request.form['quantity'])
+            db.session.add(cart)
+        else:
+            citem.quantity += int(request.form['quantity'])
+        db.session.commit()
+        return redirect('/all_products?category=all')
+    
+    return render_template("add_to_cart.html",prod=prod,user=current_user)
+
+@app.route("/view_cart/<user_id>",methods=["GET","POST"])
+@login_required
+def view_cart(user_id):
+    cart=CartItem.query.filter_by(user_id=user_id).all()
+    return render_template("view_cart.html", cart=cart)
+
 # All products page (visible to all users)
 @app.route('/all_products', methods=['GET'])
 @login_required
 def all_products():
     category_id = request.args.get('category')
+    print(current_user.id)
+
     if category_id == 'all':
         products = Product.query.all()
     elif category_id:
@@ -131,7 +155,7 @@ def all_products():
         products = []
 
     categories = Category.query.all()
-    return render_template('all_products.html', products=products, categories=categories)
+    return render_template('all_products.html', products=products, categories=categories,user=current_user)
 
 @app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET'])
 @login_required
