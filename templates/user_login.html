@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Unique Mart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .head-container {
+            background-color: #008080;
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .head-container h1 {
+            font-family: "Times New Roman", serif;
+            font-size: 36px;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .head-container p {
+            font-size: 18px;
+            color: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 5px;
+            width: 400px;
+        }
+
+        .box h1 {
+            font-family: "Times New Roman", serif;
+            font-size: 30px;
+            color: #008080;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .field label {
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            background-color: #fff;
+            padding: 0 5px;
+            font-size: 14px;
+            color: #008080;
+        }
+
+        .login-button {
+            display: block;
+            width: 100%;
+            background-color: #008080;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-button:hover {
+            background-color: #006060;
+        }
+
+        .separator {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .line {
+            border-bottom: 1px solid #ccc;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        .other {
+            text-align: center;
+        }
+
+        .option {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .option a {
+            color: #008080;
+            text-decoration: none;
+        }
+        .admin_login{
+            color: #008080;
+            text-decoration: none;
+        }
+
+        .admin_login:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="head-container">
+        <h1>Unique Mart</h1>
+        <p>Discover a world of unique products at Unique Mart.</p>
+    </div>
+    <div class="login-container">
+        <div class="box">
+            <h1>Welcome to Unique Mart</h1>
+            <form class="login-form" action="{{ url_for('user_login') }}" method="POST">
+                <div class="field">
+                    <input id="email" type="email" placeholder="Email" name="email" value="{{ formdata['email'] if formdata }}" required>
+                    <label for="email"> </label>
+                </div>
+                <div class="field">
+                    <input id="password" type="password" placeholder="Password" name="password" required>
+                    <label for="password"> </label>
+                </div>
+                <button class="login-button" title="login">Log In</button>
+                <div class="separator">
+                    <div class="line"></div>
+                </div>
+                <div class="option">
+                    <p>Don't have an account? <a href="{{ url_for('user_signup') }}">Sign Up</a></p>
+                    <p>Are you an Admin? <a href="{{ url_for('admin_login') }}">Login here</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

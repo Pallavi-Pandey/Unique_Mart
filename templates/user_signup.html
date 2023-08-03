@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Unique Mart</title>
+    <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='signup.css') }}"> -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ url_for('static', filename='js/signup_validations.js') }}" async type="text/javascript"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-family: "Times New Roman", serif;
+            font-size: 36px;
+            color: #008080;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            border-radius: 5px;
+            width: 400px;
+            max-width: 100%;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .prompt {
+            margin: 0;
+            color: #e74c3c;
+            font-size: 14px;
+        }
+
+        .form-check {
+            margin-bottom: 20px;
+        }
+
+        input[type="submit"] {
+            display: block;
+            width: 100%;
+            background-color: #008080;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #006060;
+        }
+
+        .option {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .option a {
+            color: #008080;
+            text-decoration: none;
+        }
+
+        .footer {
+            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #777;
+        }
+
+    </style>
+</head>
+<body>
+    <main>
+        {% block flashing_content -%}
+        {% with messages = get_flashed_messages(with_categories=true) -%}
+        {% if messages -%}
+        {% for category, message in messages -%}
+        
+        {% endfor -%}
+        {% endif -%}
+        {% endwith -%}
+        {% endblock -%}
+        <div class="page">
+            <div class="header">
+                <h1>Unique Mart</h1>
+                <p>Sign up to buy all households at one place.</p>
+                <hr>
+            </div>
+            <div class="container">
+                <form method="POST" action="{{ url_for('user_signup') }}" id="signUpForm" method="post" onsubmit="return validateForm()">
+                    <input onblur="triggerOnBlur('email','mailPrompt')" onfocus="triggerOnFocus('mailPrompt')" type="email" 
+                        class="form-control" id="email" name="email" placeholder="E-mail" required value="{{ formdata['email'] if formdata }}">
+                    <p id="mailPrompt" class="prompt"></p>
+
+                    <input onblur="triggerOnBlur('username_in_signup','userNamePrompt')" onfocus="triggerOnFocus('userNamePrompt')" type="text" 
+                        class="form-control" id="username_in_signup" name="username" placeholder="Username" required value="{{ formdata['username'] if formdata }}">
+                    <p id="userNamePrompt" class="prompt"></p>
+
+                    <input onblur="triggerOnBlur('passwordInSignUp','passwordPrompt')" onfocus="triggerOnFocus('passwordPrompt')" type="password" 
+                        class="form-control" id="passwordInSignUp" name="password" placeholder="Password" required>
+                    <p id="passwordPrompt" class="prompt"></p>
+
+                    <input onblur="triggerOnBlur('conifrm_password_in_signup','confirmPasswordPrompt')" onfocus="triggerOnFocus('confirmPasswordPrompt')" type="password" 
+                        class="form-control" id="conifrm_password_in_signup" name="confirm_password" placeholder="Confirm Password" required>
+                    <p id="confirmPasswordPrompt" class="prompt"></p>
+                    <a href="{{ url_for('all_products') }}"><input type="submit" value="Sign up"></a>
+                </form>
+                <div class="option">
+                    <p>Have an account? <a href="{{ url_for('user_login') }}">LogIn</a></p>
+                    <p>Are you an Admin? <a href="{{ url_for('admin_login') }}">Login here</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

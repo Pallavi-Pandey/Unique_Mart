@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unique Mart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+
+        }
+
+        nav {
+            background-color: #008080;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: bold;
+            font-size: 20px;
+            margin-right: 20px;
+            transition: color 0.3s ease;
+        }
+
+
+        nav li a:hover {
+            color: #006060;
+        }
+
+        .welcome-container {
+            text-align: center;
+            padding: 100px 0;
+        }
+
+        .welcome-container h1 {
+            font-size: 36px;
+            color: #008080;
+            margin-bottom: 20px;
+        }
+
+        .welcome-container p {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .welcome-container a {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #008080;
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .welcome-container a:hover {
+            background-color: #006060;
+        }
+
+        .category-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .category-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 300px;
+            flex: 1 1 300px;
+        }
+
+        .category-card h2 {
+            font-size: 24px;
+            color: #008080;
+            margin-bottom: 10px;
+        }
+
+        .category-card p {
+            font-size: 16px;
+            color: #444;
+        }
+
+        .category-card img {
+            max-width: 200%;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="left-side">
+            <a href="{{ url_for('home') }}">Unique Mart</a>
+        </div>
+        <div class="right-side">
+            <a href="{{ url_for('cart') }}">Cart</a>
+            <a href="#">Profile</a>
+            <a href="#">Logout</a>
+        </div>
+    </nav>
+
+    <div class="welcome-container">
+        <h1>Welcome to Unique Mart</h1>
+        <p>Thank you for logging in!</p>
+        <p>Explore our collection of unique household items.</p>
+        
+    </div>
+    <div class="category-container">
+        <div class="category-card">
+            <img src="static\images\Fruits.jpg" alt="Fruits">
+            <h2>Fruits</h2>
+            <p>Explore our fresh and delicious selection of fruits.</p>
+        </div>
+
+        <div class="category-card">
+            <img src="static\images\Vegetables.jpg" alt="Vegetables">
+            <h2>Vegetables</h2>
+            <p>Discover a wide variety of fresh and nutritious vegetables.</p>
+        </div>
+
+        <div class="category-card">
+            <img src="static\images\Bodycare.jpg" alt="Body Care">
+            <h2>Body Care</h2>
+            <p>Pamper yourself with our range of high-quality body care products.</p>
+        </div>
+
+        <div class="category-card">
+            <img src="static\images\kitchen.jpg" alt="Kitchen">
+            <h2>Kitchen</h2>
+            <p>Find essential kitchen items and gadgets to enhance your cooking experience.</p>
+        </div>
+    </div>
+</body>
+
+</html>

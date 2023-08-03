@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Products</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            color: #008080;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        select {
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            background-color: #008080;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #006060;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        img {
+            display: block;
+            max-width: 200px;
+            margin-top: 10px;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>All Products</h1>
+    <form method="GET" action="/all_products">
+        <label for="category">Select Category:</label>
+        <select name="category" id="category">
+            <option value="all">All</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+    <hr>
+    <ul>
+        {% for product in products %}
+        <li>
+            <strong>{{ product.product_name }}</strong><br>
+            Price: ${{ product.price }}<br>
+            Manufacture Date: {{ product.manufacture_date }}<br>
+            Expiry Date: {{ product.expiry_date }}<br>
+            Quantity: {{ product.quantity }}<br>
+            Category: {{ product.category.name }}<br>
+            {% if product.image_link %}
+            <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100">
+            {% endif %}
+            <br>
+            <hr>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
