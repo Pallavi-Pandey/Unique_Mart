@@ -33,8 +33,32 @@ def load_user(user_id):
 @app.route('/admin/home')
 @login_required
 def admin_home():
-    return render_template('admin_home.html')
+    existing_category = Category.query.all()
+    print(existing_category)
+    # return "admin home"
+    return render_template('admin_home1.html',data=existing_category)
 
+@app.route("/delete_category/<cat_id>", methods=['GET'])
+@login_required
+def delete_cat(cat_id):
+    db.session.delete(Category.query.filter_by(id=cat_id).first())
+    db.session.commit()
+    return redirect("/admin/home")
+
+
+@app.route("/edit_category/<cat_id>", methods=['GET', 'POST'])
+@login_required
+def edit_cat(cat_id):
+    cat= Category.query.filter_by(id=cat_id).first()
+    if request.method=='POST':
+        category_name = request.form['category_name']
+        cat.name=category_name
+        db.session.add(cat)
+        db.session.commit()
+        return redirect("/admin/home")
+    
+    print(cat)
+    return render_template('edit_category.html', data=cat)
 
 # Add Category page (accessible to admins only after login)
 @app.route('/add_category', methods=['GET', 'POST'])
@@ -71,7 +95,13 @@ def all_products():
     categories = Category.query.all()
     return render_template('all_products.html', products=products, categories=categories)
 
+@app.route("/edit_product",methods=['GET', 'POST'])
+@login_required
+def edit_product():
 
+    if request.method=='POST':
+        return "hi"
+    return render_template("edit_product.html")
 
 # Add Product page (accessible to admins only after login)
 @app.route('/add_product', methods=['GET', 'POST'])

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    welcom to category {{data.name}} 
+    <h1>Edit Category</h1>
+<form method="POST" action="/edit_category/{{data.id}}">
+    <label for="category_name">Category Name:</label>
+    <input type="text" id="category_name" name="category_name" required>
+    <br>
+    <input type="submit" value="Edit Category">
+</form>
+</body>
+</html>
