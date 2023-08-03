@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Products</title>
+    <title>Document</title>
     <style>
         /* Add your CSS rules here */
         body {
@@ -59,45 +57,39 @@
 </head>
 <body>
     <h1>Add Product</h1>
-    <form method="POST" action="{{ url_for('add_product') }}">
+    <form method="POST" action="/edit_product/{{cat.id}}/{{pro.id}}">
 
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-        </select>
+
         <br>
         <br>
 
         <label for="product_name">Product Name:</label>
-        <input type="text" id="product_name" name="product_name" required>
+        <input type="text" id="product_name" name="product_name" value="{{pro.product_name}}" required>
 
         <label for="image_link">Image:</label>
-        <input type="text" name="image_link" id="image_link">
+        <input type="text" name="image_link" id="image_link" value="{{pro.image_link}}">
         <br>
 
         <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required>
+        <input type="number" id="price" name="price" step="0.01" value="{{pro.price}}" required>
 
         <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required>
+        <input type="number" id="quantity" name="quantity" value="{{pro.quantity}}" required>
         <br>
 
         <label for="manufacture_date">Manufacture Date:</label>
-        <input type="date" id="manufacture_date" name="manufacture_date" required>
+        <input type="date" id="manufacture_date" name="manufacture_date" value="{{pro.manufacture_date}}" required>
         <br>
         <br>
 
         <label for="expiry_date">Expiry Date:</label>
-        <input type="date" id="expiry_date" name="expiry_date" required>
+        <input type="date" id="expiry_date" name="expiry_date" value="{{pro.expiry_date}}" required>
         <br>
         <br>
         <br>
 
-        <input type="submit" value="Add Product">
+        <input type="submit" value="Edit Product">
     </form>
 
 </body>
-
 </html>

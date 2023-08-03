@@ -60,6 +60,32 @@ def edit_cat(cat_id):
     print(cat)
     return render_template('edit_category.html', data=cat)
 
+
+@app.route("/edit_product/<cat_id>/<pro_id>",methods=['GET', 'POST'])
+@login_required
+def edit_product(cat_id,pro_id):
+    cat= Category.query.filter_by(id=cat_id).first()
+    pro= Product.query.filter_by(id=pro_id).first()
+    if request.method=='POST':
+        product_name = request.form['product_name']
+        price = float(request.form['price'])
+        manufacture_date = datetime.strptime(request.form['manufacture_date'], '%Y-%m-%d')
+        expiry_date = datetime.strptime(request.form['expiry_date'], '%Y-%m-%d')
+
+        quantity = int(request.form['quantity'])
+        image_link = request.form['image_link']
+        pro.product_name=product_name
+        pro.price=price
+        pro.manufacture_date=manufacture_date
+        pro.expiry_date=expiry_date
+        pro.quantity=int(request.form['quantity'])
+        pro.image_link=image_link
+        db.session.add(pro)
+        db.session.commit()
+        return redirect("/view_category/"+str(cat_id))
+    return render_template("edit_product.html",cat=cat,pro=pro)
+
+
 @app.route("/view_category/<cat_id>", methods=['GET'])
 @login_required
 def view_cat(cat_id):
@@ -107,13 +133,13 @@ def all_products():
     categories = Category.query.all()
     return render_template('all_products.html', products=products, categories=categories)
 
-@app.route("/edit_product",methods=['GET', 'POST'])
+@app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET'])
 @login_required
-def edit_product():
+def delete_product(cat_id,pro_id):
+    db.session.delete(Product.query.filter_by(id=pro_id).first())
+    db.session.commit()
+    return redirect("/view_category/"+str(cat_id))
 
-    if request.method=='POST':
-        return "hi"
-    return render_template("edit_product.html")
 
 # Add Product page (accessible to admins only after login)
 @app.route('/add_product', methods=['GET', 'POST'])

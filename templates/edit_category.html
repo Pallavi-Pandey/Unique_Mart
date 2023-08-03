@@ -10,7 +10,7 @@
     <h1>Edit Category</h1>
 <form method="POST" action="/edit_category/{{data.id}}">
     <label for="category_name">Category Name:</label>
-    <input type="text" id="category_name" name="category_name" required>
+    <input type="text" id="category_name" name="category_name" value="{{data.name}}" required>
     <br>
     <input type="submit" value="Edit Category">
 </form>

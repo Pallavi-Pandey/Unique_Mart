@@ -12,7 +12,7 @@
     <ul>
     {% for category in data %}
       <li>
-        <em>{{ category.id }}:</em> {{ category.name }} <a href="/edit_category/{{ category.id }}">edit </a>
+         {{ category.name }} <a href="/edit_category/{{ category.id }}">edit </a>
         <br> <a href="/delete_category/{{ category.id }}">delete </a>
         <br> <a href="/view_category/{{ category.id }}">view </a>
       </li>

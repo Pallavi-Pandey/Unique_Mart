@@ -1,21 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    {{cat.name}} <a href="/add_product">Add Product </a>
-    <ul>
-        {% for product in products %}
-          <li>
-            <em>{{ product.id }}:</em> {{ product.product_name }} {{product.price}} {{product.manufacture_date}} {{product.expiry_date}} {{product.quantity}} <a href="/edit_product/{{ product.id }}">edit </a>
-            <br> <a href="/delete_product/{{ product.id }}">delete </a>
-            <br> <a href="/view_product/{{ product.id }}">view </a>
+    <title>Product List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
 
-          </li>
-        {% endfor %}
-        </ul>
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>{{cat.name}} <a href="/add_product">Add Product </a></h1>
+    <table>
+        <thead>
+            <tr>
+                <!-- <th>ID</th> -->
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Manufacture Date</th>
+                <th>Expiry Date</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <!-- <td>{{ product.id }}</td> -->
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.manufacture_date }}</td>
+                <td>{{ product.expiry_date }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
+                    <a href="/edit_product/{{cat.id}}/{{ product.id }}">Edit</a> |
+                    <a href="/delete_product/{{cat.id}}/{{ product.id }}">Delete</a> |
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
+
 </html>
