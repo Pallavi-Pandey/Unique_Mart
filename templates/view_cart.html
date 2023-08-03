@@ -1,11 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Shopping Cart</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
 </head>
+
 <body>
-    {{cart}}
+    <h1>Shopping Cart</h1>
+    <div class="cart-items">
+        {% for item in cart %}
+        <div class="cart-item">
+            <img src="https://via.placeholder.com/100" alt="Product Image">
+            <div class="item-details">
+                <h2>{{ item.product.name }}</h2>
+                <p>Price: ${{ item.product.price }}</p>
+                <p>Quantity: {{ item.quantity }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Total price calculation (you can handle this in the backend) -->
+    <div class="cart-total">
+        <p>Total: ${{ total }}</p>
+    </div>
 </body>
+
 </html>

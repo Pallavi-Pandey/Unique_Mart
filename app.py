@@ -134,11 +134,18 @@ def add_to_cart(user_id,product_id):
     
     return render_template("add_to_cart.html",prod=prod,user=current_user)
 
+def calculate_total(data):
+    total=0
+    for item in data:
+        total+=item.product.price*item.quantity
+    return total
+
 @app.route("/view_cart/<user_id>",methods=["GET","POST"])
 @login_required
 def view_cart(user_id):
     cart=CartItem.query.filter_by(user_id=user_id).all()
-    return render_template("view_cart.html", cart=cart)
+    total = calculate_total(cart)
+    return render_template("view_cart.html", cart=cart,total=total)
 
 # All products page (visible to all users)
 @app.route('/all_products', methods=['GET'])
