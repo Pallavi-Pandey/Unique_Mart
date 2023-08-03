@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {{cat.name}} <a href="/add_product">Add Product </a>
+    <ul>
+        {% for product in products %}
+          <li>
+            <em>{{ product.id }}:</em> {{ product.product_name }} {{product.price}} {{product.manufacture_date}} {{product.expiry_date}} {{product.quantity}} <a href="/edit_product/{{ product.id }}">edit </a>
+            <br> <a href="/delete_product/{{ product.id }}">delete </a>
+            <br> <a href="/view_product/{{ product.id }}">view </a>
+
+          </li>
+        {% endfor %}
+        </ul>
+</body>
+</html>

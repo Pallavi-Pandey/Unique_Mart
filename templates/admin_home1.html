@@ -8,11 +8,13 @@
 <body>
     welcome admin,
   
-    <h1>Categories</h1>
+    <h1>Categories</h1> <a href="/add_category">Add Category </a>
     <ul>
     {% for category in data %}
       <li>
-        <em>{{ category.id }}:</em> {{ category.name }} <a href="/edit_category/{{ category.id }}">edit </a><br> <a href="/delete_category/{{ category.id }}">delete </a>
+        <em>{{ category.id }}:</em> {{ category.name }} <a href="/edit_category/{{ category.id }}">edit </a>
+        <br> <a href="/delete_category/{{ category.id }}">delete </a>
+        <br> <a href="/view_category/{{ category.id }}">view </a>
       </li>
     {% endfor %}
     </ul>

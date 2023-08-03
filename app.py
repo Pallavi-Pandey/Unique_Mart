@@ -60,6 +60,16 @@ def edit_cat(cat_id):
     print(cat)
     return render_template('edit_category.html', data=cat)
 
+@app.route("/view_category/<cat_id>", methods=['GET'])
+@login_required
+def view_cat(cat_id):
+    cat= Category.query.filter_by(id=cat_id).first()
+    products=Product.query.filter_by(category_id=cat_id).all()
+    print(cat)
+    print(products)
+    return render_template('view_cat.html', cat=cat, products=products)
+
+
 # Add Category page (accessible to admins only after login)
 @app.route('/add_category', methods=['GET', 'POST'])
 @login_required
@@ -70,13 +80,15 @@ def add_category():
         # Check if the category already exists in the database
         existing_category = Category.query.filter_by(name=category_name).first()
         if existing_category:
-            flash("Category already exists.", 'error')
+            return render_template('add_category.html',error="Category already exist")
         else:
             # Create a new category
             new_category = Category(name=category_name)
             db.session.add(new_category)
             db.session.commit()
             flash("Category added successfully.", 'success')
+            return redirect("/admin/home")
+
 
     return render_template('add_category.html')
 
@@ -134,8 +146,7 @@ def add_product():
         db.session.add(new_product)
         db.session.commit()
 
-        return redirect(url_for('add_product'))
-
+        return redirect("/view_category/"+str(category_id))
     categories = Category.query.all()
     return render_template('add_product.html', categories=categories)
 
