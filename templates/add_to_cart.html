@@ -16,6 +16,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Your Product:</h5>
                         <p class="card-text"><strong>{{prod.product_name}}</strong> - Price: {{prod.price}}</p>
+                       qty available :  {{prod.quantity}}
                         <h1>{{mess}}</h1>
                         <p>Please select the quantity (between 1 and 5):</p>
                         <form action="/add_to_cart/{{user.id}}/{{prod.id}}" method="POST">

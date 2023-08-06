@@ -171,14 +171,18 @@
                             <div class="product-price">Price: ${{ product.price }}</div>
                             {% if product.quantity > 0 %}
                                     <div class="product-quantity">Quantity available: {{ product.quantity }}</div>
+                                    <button class="add-to-cart-btn" onclick="location.href='/add_to_cart/{{user.id}}/{{product.id}}'">Add to Cart</button>
+                   
                                 {% else %}
                                     <div class="product-quantity">Out of stock</div>
+
                                 {% endif %}
                             <div class="product-quantity">category:<a href="/all_products?category={{product.category.id}}"> {{ product.category.name }}</a></div>
-                            
+                            <br>
+                            <br>
                         </div>
                         <!-- <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100"> -->
-                        <button class="add-to-cart-btn" onclick="location.href='/add_to_cart/{{user.id}}/{{product.id}}'">Add to Cart</button>
+                        <!-- <button class="add-to-cart-btn" onclick="location.href='/add_to_cart/{{user.id}}/{{product.id}}'">Add to Cart</button> -->
                     </div>
                 </div>
                 {% endif %}
