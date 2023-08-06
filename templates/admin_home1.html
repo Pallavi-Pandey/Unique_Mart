@@ -3,20 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Custom CSS */
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: Arial, sans-serif;
+        }
+        .card-text {
+            font-size: 24px;
+            color: #008080;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 24px;
+            color: gray;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .btn-primary {
+            background-color: #008080;
+            color: #fff;
+        }
+        .btn-info {
+            background-color: #a270db;
+            color: #fff;
+        }
+        .btn-danger {
+            background-color: #f18792;
+            color: #fff;
+        }
+        .btn-secondary {
+            background-color: #39e28b;
+            color: #fff;
+        }
+        .btn-group {
+            margin-left: auto;
+        }
+        .all-categories {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-    welcome admin,
-  
-    <h1>Categories</h1> <a href="/add_category">Add Category </a>
-    <ul>
-    {% for category in data %}
-      <li>
-         {{ category.name }} <a href="/edit_category/{{ category.id }}">edit </a>
-        <br> <a href="/delete_category/{{ category.id }}">delete </a>
-        <br> <a href="/view_category/{{ category.id }}">view </a>
-      </li>
-    {% endfor %}
-    </ul>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-text text-center">Welcome, Admin</h1>
+                        <!-- <h3 class="card-title">Add New Category</h3> -->
+                        <a href="/add_category" class="btn btn-primary">Add New Category</a>
+                        <div class="all-categories">All Categories</div>
+                        <ul class="list-group mt-3">
+                            {% for category in data %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ category.name }}
+                                <div class="btn-group">
+                                    <a href="/edit_category/{{ category.id }}" class="btn btn-sm btn-info">Edit</a>
+                                    <a href="/delete_category/{{ category.id }}" class="btn btn-sm btn-danger">Delete</a>
+                                    <a href="/view_category/{{ category.id }}" class="btn btn-sm btn-secondary">View</a>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
+

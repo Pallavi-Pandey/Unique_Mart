@@ -5,22 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product List</title>
+    <!-- Add Bootstrap CSS link -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
+        /* Custom styles */
         a {
             text-decoration: none;
         }
@@ -29,44 +17,72 @@
             text-decoration: underline;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
+        /* Custom button colors */
+        .btn-custom-primary {
+            background-color: #4dc9c9;
+            border-color: #008080;
+        }
+
+        .btn-custom-primary:hover {
+            background-color: #43cece;
+            border-color: #005c5c;
+        }
+
+        .btn-custom-danger {
+            background-color: #d53a3a;
+            border-color: #b30000;
+        }
+
+        .btn-custom-danger:hover {
+            background-color: #de3b3b;
+            border-color: #990000;
+        }
+
+        /* Custom heading color */
+        h1 {
+            color: #008080;
         }
     </style>
 </head>
 
 <body>
-    <h1>{{cat.name}} <a href="/add_product">Add Product </a></h1>
-    <table>
-        <thead>
-            <tr>
-                <!-- <th>ID</th> -->
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Manufacture Date</th>
-                <th>Expiry Date</th>
-                <th>Quantity</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr>
-                <!-- <td>{{ product.id }}</td> -->
-                <td>{{ product.product_name }}</td>
-                <td>{{ product.price }}</td>
-                <td>{{ product.manufacture_date }}</td>
-                <td>{{ product.expiry_date }}</td>
-                <td>{{ product.quantity }}</td>
-                <td>
-                    <a href="/edit_product/{{cat.id}}/{{ product.id }}">Edit</a> |
-                    <a href="/delete_product/{{cat.id}}/{{ product.id }}">Delete</a> |
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="container mt-4">
+        <h1 class="mb-4">{{cat.name}} <a href="/add_product" class="btn btn-custom-primary ml-2">Add Product</a></h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <!-- <th>ID</th> -->
+                    <th>Product Name</th>
+                    <th>Price</th>
+                    <th>Manufacture Date</th>
+                    <th>Expiry Date</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr>
+                    <!-- <td>{{ product.id }}</td> -->
+                    <td>{{ product.product_name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.manufacture_date }}</td>
+                    <td>{{ product.expiry_date }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>
+                        <a href="/edit_product/{{cat.id}}/{{ product.id }}" class="btn btn-sm btn-custom-primary mr-2">Edit</a>
+                        <a href="/delete_product/{{cat.id}}/{{ product.id }}" class="btn btn-sm btn-custom-danger">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Add Bootstrap JS and Popper.js (required for Bootstrap features) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

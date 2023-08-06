@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Products</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -76,41 +78,118 @@
             border: none;
             border-top: 1px solid #ccc;
         }
+
+        /* Custom CSS */
+        .category-section {
+            margin-bottom: 40px;
+        }
+
+        .category-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #008080;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-details {
+            flex-grow: 1;
+        }
+
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .product-price {
+            color: #008080;
+        }
+
+        .product-quantity {
+            color: #555;
+        }
+
+        .add-to-cart-btn {
+            background-color: #008080;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #006060;
+        }
+
     </style>
 </head>
 <body>
-    <h1>All Products</h1> {{user.name}}
-    <form method="GET" action="/all_products">
-        <label for="category">Select Category:</label>
-        <select name="category" id="category">
-            <option value="all">All</option>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Filter">
-    </form>
-    <a href="/view_cart/{{user.id}}">View Cart</a>
-    <hr>
-    <ul>
-        {% for product in products %}
-        <li>
-            <strong>{{ product.product_name }}</strong><br>
-            Price: ${{ product.price }}<br>
-            Manufacture Date: {{ product.manufacture_date }}<br>
-            Expiry Date: {{ product.expiry_date }}<br>
-            Quantity available in stock: {{ product.quantity }}<br>
-            Category: {{ product.category.name }}<br>
-            {% if product.image_link %}
-            <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100">
-            {% endif %}
-            <a href="/add_to_cart/{{user.id}}/{{product.id}}">Add to Cart</a>
+    <div class="container">
+        <h1>All Products</h1>
+        <form method="GET" action="/all_products">
+            <label for="category">Select Category:</label>
+            <select name="category" id="category">
+                <option value="all">---</option>
+                <option value="all">All</option>
+                {% for category in all_categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="Filter">
+        </form>
+        <form method="GET" action="/all_products">
+            <label for="search">Search Product:</label>
+            <input type="text" name="query" id="search" placeholder="Enter product name">
+            <input type="submit" value="Search">
+        </form>
+        
+        <h3><a href="/view_cart/{{user.id}}">View Cart</a></h3>
 
-            <br>
-            <hr>
-            
-        </li>
+        <h4 style="color: rgb(34, 142, 34); font-size: 14px; text-align: center; ">{{mess}}</h4>
+
+        <hr>
+        {% for category in categories %}
+        <div class="category-section">
+            <!-- <div class="category-name">{{ category.name }}</div> -->
+            <div class="row">
+                {% for product in products %}
+                {% if product.category_id == category.id %}
+                <div class="col-md-4">
+                    <div class="product-item">
+                        <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100">
+                        <div class="product-details">
+                            <div class="product-name">{{ product.product_name }}</div>
+                            <div class="product-price">Price: ${{ product.price }}</div>
+                            {% if product.quantity > 0 %}
+                                    <div class="product-quantity">Quantity available: {{ product.quantity }}</div>
+                                {% else %}
+                                    <div class="product-quantity">Out of stock</div>
+                                {% endif %}
+                            <div class="product-quantity">category:<a href="/all_products?category={{product.category.id}}"> {{ product.category.name }}</a></div>
+                            
+                        </div>
+                        <!-- <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100"> -->
+                        <button class="add-to-cart-btn" onclick="location.href='/add_to_cart/{{user.id}}/{{product.id}}'">Add to Cart</button>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

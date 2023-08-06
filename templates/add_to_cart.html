@@ -3,23 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Your Cart</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-    Welcome to your cart dear {{user.name}},
-    <br>
-    your prod is:
-    <br>
-    {{ prod.product_name}} : name | {{prod.price}}
-    <br>
-    please select the quantity
-    <br>
-    <form action="/add_to_cart/{{user.id}}/{{prod.id}}" method="POST">
-        <label for="quantity">Quantity (between 1 and 5):</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="5">
-        <input type="submit">
-      </form>
+<body class="bg-light">
+    <div class="container mt-5">
+        <h1 class="text-center">Welcome to your cart, Dear {{user.name}}</h1>
+        <div class="row mt-4">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Product:</h5>
+                        <p class="card-text"><strong>{{prod.product_name}}</strong> - Price: {{prod.price}}</p>
+                        <h1>{{mess}}</h1>
+                        <p>Please select the quantity (between 1 and 5):</p>
+                        <form action="/add_to_cart/{{user.id}}/{{prod.id}}" method="POST">
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="quantity" name="quantity" min="1" max="5" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add to Cart</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <style>
+        .btn-primary {
+            background-color: #008080;
+            color: #fff;
+        }
+        .text-center{
+            color: #008080;
+        }
+    </style>
 
-    
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

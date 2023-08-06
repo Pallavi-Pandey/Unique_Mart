@@ -6,98 +6,79 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Products</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+
+<body style="background-color: #f2f2f2;">
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h1 class="text-center">Add Product</h1>
+                <form method="POST" action="{{ url_for('add_product') }}">
+
+                    <div class="form-group">
+                        <label for="category">Category:</label>
+                        <select id="category" name="category" class="form-control" required>
+                            {% for category in categories %}
+                            <option value="{{ category.id }}">{{ category.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product_name">Product Name:</label>
+                        <input type="text" id="product_name" name="product_name" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image_link">Image:</label>
+                        <input type="text" name="image_link" id="image_link" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="number" id="price" name="price" step="0.01" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="manufacture_date">Manufacture Date:</label>
+                        <input type="date" id="manufacture_date" name="manufacture_date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expiry_date">Expiry Date:</label>
+                        <input type="date" id="expiry_date" name="expiry_date" class="form-control" required>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-teal">Add Product</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom CSS for Teal button color -->
     <style>
-        /* Add your CSS rules here */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            color: #333;
-        }
-
-        h1 {
-            color: #008080;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-        }
-
-        input[type="text"],
-        textarea,
-        input[type="number"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        button[type="submit"] {
+        .btn-teal {
             background-color: #008080;
             color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
         }
-
-        button[type="submit"]:hover {
-            background-color: #0056b3;
+        .text-center{
+            color: #008080;
         }
     </style>
-</head>
-<body>
-    <h1>Add Product</h1>
-    <form method="POST" action="{{ url_for('add_product') }}">
 
-        <label for="category">Category:</label>
-        <select id="category" name="category" required>
-            {% for category in categories %}
-            <option value="{{ category.id }}">{{ category.name }}</option>
-            {% endfor %}
-        </select>
-        <br>
-        <br>
-
-        <label for="product_name">Product Name:</label>
-        <input type="text" id="product_name" name="product_name" required>
-
-        <label for="image_link">Image:</label>
-        <input type="text" name="image_link" id="image_link">
-        <br>
-
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required>
-
-        <label for="quantity">Quantity:</label>
-        <input type="number" id="quantity" name="quantity" required>
-        <br>
-
-        <label for="manufacture_date">Manufacture Date:</label>
-        <input type="date" id="manufacture_date" name="manufacture_date" required>
-        <br>
-        <br>
-
-        <label for="expiry_date">Expiry Date:</label>
-        <input type="date" id="expiry_date" name="expiry_date" required>
-        <br>
-        <br>
-        <br>
-
-        <input type="submit" value="Add Product">
-    </form>
-
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>

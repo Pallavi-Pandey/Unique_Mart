@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Edit Product</title>
     <style>
         /* Add your CSS rules here */
         body {
@@ -14,6 +15,8 @@
 
         h1 {
             color: #008080;
+            text-align: center;
+            margin-top: 30px;
         }
 
         form {
@@ -23,6 +26,7 @@
             background-color: #fff;
             border: 1px solid #ccc;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
 
         label {
@@ -32,9 +36,10 @@
 
         input[type="text"],
         textarea,
-        input[type="number"] {
+        input[type="number"],
+        input[type="date"] {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin-bottom: 20px;
             border: 1px solid #ccc;
             border-radius: 4px;
@@ -48,6 +53,7 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            width: 100%;
         }
 
         button[type="submit"]:hover {
@@ -55,41 +61,34 @@
         }
     </style>
 </head>
+
 <body>
-    <h1>Add Product</h1>
+    <h1>Edit Product</h1>
     <form method="POST" action="/edit_product/{{cat.id}}/{{pro.id}}">
-
-
-        <br>
-        <br>
 
         <label for="product_name">Product Name:</label>
         <input type="text" id="product_name" name="product_name" value="{{pro.product_name}}" required>
 
         <label for="image_link">Image:</label>
         <input type="text" name="image_link" id="image_link" value="{{pro.image_link}}">
-        <br>
 
         <label for="price">Price:</label>
         <input type="number" id="price" name="price" step="0.01" value="{{pro.price}}" required>
 
         <label for="quantity">Quantity:</label>
         <input type="number" id="quantity" name="quantity" value="{{pro.quantity}}" required>
-        <br>
 
         <label for="manufacture_date">Manufacture Date:</label>
         <input type="date" id="manufacture_date" name="manufacture_date" value="{{pro.manufacture_date}}" required>
-        <br>
-        <br>
 
         <label for="expiry_date">Expiry Date:</label>
         <input type="date" id="expiry_date" name="expiry_date" value="{{pro.expiry_date}}" required>
-        <br>
+
         <br>
         <br>
 
-        <input type="submit" value="Edit Product">
+        <button type="submit">Edit Product</button>
     </form>
-
 </body>
+
 </html>

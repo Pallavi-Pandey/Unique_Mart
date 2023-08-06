@@ -5,8 +5,8 @@ import secrets
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-
-
+from flask_restful import Resource, Api
+from api import *
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///BigMart.sqlite3'
@@ -14,6 +14,15 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///BigMart.sqlite3'
 db.init_app(app)
 app.app_context().push()
 app.config['SECRET_KEY'] = 'Pallavi'
+
+
+api = Api(app)
+
+
+api.add_resource(Product_api, '/api/product','/api/product/<string:product_id>')
+api.add_resource(Category_api, '/api/category','/api/category/<string:category_id>')
+api.add_resource(CategoryList,'/api/categories')
+api.add_resource(ProductList,'/api/products')
 
 
 
@@ -130,7 +139,7 @@ def add_to_cart(user_id,product_id):
         else:
             citem.quantity += int(request.form['quantity'])
         db.session.commit()
-        return redirect('/all_products?category=all')
+        return redirect('/all_products?category=all&mess='+"Added to Cart Successfully")
     
     return render_template("add_to_cart.html",prod=prod,user=current_user)
 
@@ -145,24 +154,66 @@ def calculate_total(data):
 def view_cart(user_id):
     cart=CartItem.query.filter_by(user_id=user_id).all()
     total = calculate_total(cart)
-    return render_template("view_cart.html", cart=cart,total=total)
+    mess = request.args.get('mess')
+    return render_template("view_cart.html", cart=cart,total=total,mess=mess)
+
+@app.route("/remove_from_cart/<pro_id>", methods=['GET'])
+@login_required
+def remove_from_cart(pro_id):
+    user_id=current_user.id
+    db.session.delete(CartItem.query.filter_by(product_id=pro_id,user_id=user_id).first())
+    db.session.commit()
+    return redirect("/view_cart/"+str(user_id))
+
+@app.route("/payment", methods=["GET", "POST"])
+@login_required
+def payment():
+    user_id = current_user.id 
+    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    for item in cart_items:
+        prod=Product.query.filter_by(id=item.product_id).first()
+        prod.quantity-=item.quantity
+        db.session.delete(item)
+        db.session.add(prod)
+        db.session.commit()
+
+    db.session.commit()
+
+    return redirect('/all_products?category=all&mess='+"Paid Successfully. Continue Shopping")
 
 # All products page (visible to all users)
 @app.route('/all_products', methods=['GET'])
 @login_required
-def all_products():
+def all_products(mess=None):
     category_id = request.args.get('category')
-    print(current_user.id)
-
-    if category_id == 'all':
-        products = Product.query.all()
-    elif category_id:
-        products = Product.query.filter_by(category_id=category_id).all()
+    search_query = request.args.get('query')
+    if search_query:
+        products = Product.query.filter(Product.product_name.ilike(f"%{search_query}%" )).all()
     else:
         products = []
-
+    mess = request.args.get('mess')
+    print(search_query)
+    print(products)
+    print(current_user.id)
+    print(mess)
     categories = Category.query.all()
-    return render_template('all_products.html', products=products, categories=categories,user=current_user)
+    if category_id == 'all':
+        products = Product.query.all()
+        categories = Category.query.all()
+    elif category_id:
+        products = Product.query.filter_by(category_id=category_id).all()
+        categories = Category.query.filter_by(id=category_id).all()
+    # else:
+    #     products = []
+    #     categories = []
+    all_categories=Category.query.all()
+    print(products)
+    if mess:
+        return render_template('all_products.html', products=products, categories=categories,user=current_user,mess=mess,all_categories=all_categories)
+    else:
+        return render_template('all_products.html', products=products, categories=categories,user=current_user,all_categories=all_categories)
+    
+
 
 @app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET'])
 @login_required
@@ -170,6 +221,21 @@ def delete_product(cat_id,pro_id):
     db.session.delete(Product.query.filter_by(id=pro_id).first())
     db.session.commit()
     return redirect("/view_category/"+str(cat_id))
+
+
+@app.route('/search')
+@login_required
+def search():
+    search_query = request.args.get('query')
+    if search_query:
+        products = Product.query.filter(Product.product_name.ilike(f"%{search_query}%")).all()
+    else:
+        products = []
+    print(search_query)
+    x=[]
+    for product in products:
+        print(product.product_name)
+    return render_template('search.html',products=products)
 
 
 # Add Product page (accessible to admins only after login)
@@ -247,7 +313,7 @@ def user_login():
 
         # Log in the user
         login_user(user)
-        return redirect(url_for('all_products'))
+        return redirect('/all_products?category=all')
 
     return render_template('user_login.html')
 
