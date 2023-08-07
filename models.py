@@ -31,7 +31,7 @@ class Category(db.Model):
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product_name = db.Column(db.String(200), nullable=False)
+    product_name = db.Column(db.String(200), nullable=False, unique=True)
     price = db.Column(db.Float, nullable=False)
     manufacture_date = db.Column(db.Date, nullable=False)
     expiry_date = db.Column(db.Date, nullable=False)
@@ -51,3 +51,6 @@ class CartItem(db.Model):
 
     user = db.relationship('User', backref='cart_items')
     product = db.relationship('Product', backref='cart_items')
+
+# class Transaction(db.Model):
+#     id = 

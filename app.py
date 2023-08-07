@@ -7,6 +7,7 @@ from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_restful import Resource, Api
 from api import *
+import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///BigMart.sqlite3'
@@ -36,9 +37,12 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+@login_manager.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/')
 # Routes
 
-# Admin dashboard page (accessible to admins only after login)
+# Admin dashboard (accessible to admins only after login)
 @app.route('/admin/home')
 @login_required
 def admin_home():
@@ -47,6 +51,7 @@ def admin_home():
     # return "admin home"
     return render_template('admin_home1.html',data=existing_category)
 
+# Delete Category 
 @app.route("/delete_category/<cat_id>", methods=['GET'])
 @login_required
 def delete_cat(cat_id):
@@ -54,7 +59,7 @@ def delete_cat(cat_id):
     db.session.commit()
     return redirect("/admin/home")
 
-
+# Edit Category 
 @app.route("/edit_category/<cat_id>", methods=['GET', 'POST'])
 @login_required
 def edit_cat(cat_id):
@@ -65,11 +70,10 @@ def edit_cat(cat_id):
         db.session.add(cat)
         db.session.commit()
         return redirect("/admin/home")
-    
     print(cat)
     return render_template('edit_category.html', data=cat)
 
-
+# Edit Product 
 @app.route("/edit_product/<cat_id>/<pro_id>",methods=['GET', 'POST'])
 @login_required
 def edit_product(cat_id,pro_id):
@@ -80,7 +84,6 @@ def edit_product(cat_id,pro_id):
         price = float(request.form['price'])
         manufacture_date = datetime.strptime(request.form['manufacture_date'], '%Y-%m-%d')
         expiry_date = datetime.strptime(request.form['expiry_date'], '%Y-%m-%d')
-
         quantity = int(request.form['quantity'])
         image_link = request.form['image_link']
         pro.product_name=product_name
@@ -94,7 +97,7 @@ def edit_product(cat_id,pro_id):
         return redirect("/view_category/"+str(cat_id))
     return render_template("edit_product.html",cat=cat,pro=pro)
 
-
+# View Category 
 @app.route("/view_category/<cat_id>", methods=['GET'])
 @login_required
 def view_cat(cat_id):
@@ -105,13 +108,12 @@ def view_cat(cat_id):
     return render_template('view_cat.html', cat=cat, products=products)
 
 
-# Add Category page (accessible to admins only after login)
+# Add Category (accessible to admins only after login)
 @app.route('/add_category', methods=['GET', 'POST'])
 @login_required
 def add_category():
     if request.method == 'POST':
         category_name = request.form['category_name']
-
         # Check if the category already exists in the database
         existing_category = Category.query.filter_by(name=category_name).first()
         if existing_category:
@@ -123,24 +125,29 @@ def add_category():
             db.session.commit()
             flash("Category added successfully.", 'success')
             return redirect("/admin/home")
-
-
     return render_template('add_category.html')
 
+# Add to Cart 
 @app.route("/add_to_cart/<user_id>/<product_id>",methods=["GET","POST"])
 @login_required
 def add_to_cart(user_id,product_id):
     prod=Product.query.filter_by(id=product_id).first()
+    citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
     if request.method=="POST":
+        if int(request.form['quantity'])>prod.quantity:
+            return render_template("add_to_cart.html",prod=prod,user=current_user,mess="too hot to handle",citem=citem)
         citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
         if not citem:
             cart=CartItem(user_id=user_id, product_id=product_id, quantity=request.form['quantity'])
             db.session.add(cart)
         else:
+            if int(request.form['quantity'])+citem.quantity>prod.quantity:
+              return render_template("add_to_cart.html",prod=prod,user=current_user,mess="too hot to handle",citem=citem)
             citem.quantity += int(request.form['quantity'])
         db.session.commit()
         return redirect('/all_products?category=all&mess='+"Added to Cart Successfully")
-    
+    if citem:
+         return render_template("add_to_cart.html",prod=prod,user=current_user,citem=citem)
     return render_template("add_to_cart.html",prod=prod,user=current_user)
 
 def calculate_total(data):
@@ -149,6 +156,7 @@ def calculate_total(data):
         total+=item.product.price*item.quantity
     return total
 
+# View Cart 
 @app.route("/view_cart/<user_id>",methods=["GET","POST"])
 @login_required
 def view_cart(user_id):
@@ -157,6 +165,7 @@ def view_cart(user_id):
     mess = request.args.get('mess')
     return render_template("view_cart.html", cart=cart,total=total,mess=mess)
 
+#Remove from Cart
 @app.route("/remove_from_cart/<pro_id>", methods=['GET'])
 @login_required
 def remove_from_cart(pro_id):
@@ -165,6 +174,7 @@ def remove_from_cart(pro_id):
     db.session.commit()
     return redirect("/view_cart/"+str(user_id))
 
+# Payment
 @app.route("/payment", methods=["GET", "POST"])
 @login_required
 def payment():
@@ -176,9 +186,7 @@ def payment():
         db.session.delete(item)
         db.session.add(prod)
         db.session.commit()
-
     db.session.commit()
-
     return redirect('/all_products?category=all&mess='+"Paid Successfully. Continue Shopping")
 
 # All products page (visible to all users)
@@ -203,9 +211,6 @@ def all_products(mess=None):
     elif category_id:
         products = Product.query.filter_by(category_id=category_id).all()
         categories = Category.query.filter_by(id=category_id).all()
-    # else:
-    #     products = []
-    #     categories = []
     all_categories=Category.query.all()
     print(products)
     if mess:
@@ -213,8 +218,7 @@ def all_products(mess=None):
     else:
         return render_template('all_products.html', products=products, categories=categories,user=current_user,all_categories=all_categories)
     
-
-
+# Delete Products
 @app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET'])
 @login_required
 def delete_product(cat_id,pro_id):
@@ -222,7 +226,7 @@ def delete_product(cat_id,pro_id):
     db.session.commit()
     return redirect("/view_category/"+str(cat_id))
 
-
+# Search
 @app.route('/search')
 @login_required
 def search():
@@ -251,7 +255,6 @@ def add_product():
         category_id = int(request.form['category'])
         quantity = int(request.form['quantity'])
         image_link = request.form['image_link']
-
         category = Category.query.get(category_id)
         if not category:
             return "Invalid category selected."
@@ -273,6 +276,30 @@ def add_product():
     categories = Category.query.all()
     return render_template('add_product.html', categories=categories)
 
+# Profile
+@app.route('/profile/<user_id>',methods=['GET','POST'])
+@login_required
+def profile(user_id):
+    user_id = current_user
+    return render_template("profile.html",user=user_id)
+
+@app.route('/summary')
+def summary():
+    categories = Category.query.all()
+    category_names = [category.name for category in categories]
+    product_counts = [len(category.products) for category in categories]
+    plt.bar(category_names, product_counts)
+    plt.xlabel('Category')
+    plt.ylabel('Number of Products')
+    plt.title('Number of Products in Each Category')
+    plt.xticks(rotation=45)
+    plt.tight_layout()
+
+    # Save the plot to a file
+    plt.savefig('static/bar_chart.png')  # Save the chart as a static image
+
+    # Render the summary page with the bar chart
+    return render_template('summary.html', categories=categories)
 
 
 # User signup page
@@ -317,7 +344,6 @@ def user_login():
 
     return render_template('user_login.html')
 
-
 # Admin signup page
 @app.route('/admin/signup', methods=['GET', 'POST'])
 def admin_signup():
@@ -360,14 +386,12 @@ def admin_login():
 
     return render_template('admin_login.html')
 
-
 # Logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('user_login'))
-
 
 # Run the app
 if __name__ == '__main__':

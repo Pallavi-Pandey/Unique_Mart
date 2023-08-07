@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Purchase History</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0;
+            color: #333;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            color: #008080;
+        }
+
+        p {
+            margin: 5px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #008080;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Purchase History</h1>
+    <div style="margin-left: 20px;">
+        <h2>User Information</h2>
+        <p><strong>Name:</strong> {{ user.name }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+    
+    <h2>Purchase History</h2>
+    <table border="1">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total Price</th>
+            <th>Purchase Date</th>
+        </tr>
+        {% for cart_item in user.cart_items %}
+        <tr>
+            <td>{{ cart_item.id }}</td>
+            <td>{{ cart_item.product.product_name }}</td>
+            <td>${{ cart_item.product.price }}</td>
+            <td>{{ cart_item.quantity }}</td>
+            <td>${{ cart_item.product.price * cart_item.quantity }}</td>
+            <td>{{ cart_item.purchase_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
