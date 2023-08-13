@@ -1,11 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from models import *
 from models import db
-import secrets
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask_restful import Resource, Api
+from flask_login import LoginManager,login_user, login_required, logout_user, current_user
+from flask_restful import Api
 from api import *
 import matplotlib
 matplotlib.use('Agg')
@@ -53,48 +52,57 @@ def admin_home():
 @app.route("/delete_category/<cat_id>", methods=['GET','POST'])
 @login_required
 def delete_cat(cat_id):
-    db.session.delete(Category.query.filter_by(id=cat_id).first())
-    db.session.commit()
-    return redirect("/admin/home")
-
+    check = Admin.query.filter_by(email=current_user.email).first()
+    if check:
+        db.session.delete(Category.query.filter_by(id=cat_id).first())
+        db.session.commit()
+        return redirect("/admin/home")
+    else:
+        return "Access Denied"
 # Edit Category 
 @app.route("/edit_category/<cat_id>", methods=['GET', 'POST'])
 @login_required
 def edit_cat(cat_id):
-    cat= Category.query.filter_by(id=cat_id).first()
-    if request.method=='POST':
-        category_name = request.form['category_name']
-        cat.name=category_name
-        db.session.add(cat)
-        db.session.commit()
-        return redirect("/admin/home")
-    print(cat)
-    return render_template('edit_category.html', data=cat)
-
+    check = Admin.query.filter_by(email=current_user.email).first()
+    if check:
+        cat= Category.query.filter_by(id=cat_id).first()
+        if request.method=='POST':
+            category_name = request.form['category_name']
+            cat.name=category_name
+            db.session.add(cat)
+            db.session.commit()
+            return redirect("/admin/home")
+        print(cat)
+        return render_template('edit_category.html', data=cat)
+    else:
+        return "Access Denied"
 # Edit Product 
 @app.route("/edit_product/<cat_id>/<pro_id>",methods=['GET', 'POST'])
 @login_required
 def edit_product(cat_id,pro_id):
-    cat= Category.query.filter_by(id=cat_id).first()
-    pro= Product.query.filter_by(id=pro_id).first()
-    if request.method=='POST':
-        product_name = request.form['product_name']
-        price = float(request.form['price'])
-        manufacture_date = datetime.strptime(request.form['manufacture_date'], '%Y-%m-%d')
-        expiry_date = datetime.strptime(request.form['expiry_date'], '%Y-%m-%d')
-        quantity = int(request.form['quantity'])
-        image_link = request.form['image_link']
-        pro.product_name=product_name
-        pro.price=price
-        pro.manufacture_date=manufacture_date
-        pro.expiry_date=expiry_date
-        pro.quantity=int(request.form['quantity'])
-        pro.image_link=image_link
-        db.session.add(pro)
-        db.session.commit()
-        return redirect("/view_category/"+str(cat_id))
-    return render_template("edit_product.html",cat=cat,pro=pro)
-
+    check = Admin.query.filter_by(email=current_user.email).first()
+    if check:
+        cat= Category.query.filter_by(id=cat_id).first()
+        pro= Product.query.filter_by(id=pro_id).first()
+        if request.method=='POST':
+            product_name = request.form['product_name']
+            price = float(request.form['price'])
+            manufacture_date = datetime.strptime(request.form['manufacture_date'], '%Y-%m-%d')
+            expiry_date = datetime.strptime(request.form['expiry_date'], '%Y-%m-%d')
+            quantity = int(request.form['quantity'])
+            image_link = request.form['image_link']
+            pro.product_name=product_name
+            pro.price=price
+            pro.manufacture_date=manufacture_date
+            pro.expiry_date=expiry_date
+            pro.quantity=int(request.form['quantity'])
+            pro.image_link=image_link
+            db.session.add(pro)
+            db.session.commit()
+            return redirect("/view_category/"+str(cat_id))
+        return render_template("edit_product.html",cat=cat,pro=pro)
+    else:
+        return "Access Denied"
 # View Category 
 @app.route("/view_category/<cat_id>", methods=['GET'])
 @login_required
@@ -110,21 +118,24 @@ def view_cat(cat_id):
 @app.route('/add_category', methods=['GET', 'POST'])
 @login_required
 def add_category():
-    if request.method == 'POST':
-        category_name = request.form['category_name']
-        # Check if the category already exists in the database
-        existing_category = Category.query.filter_by(name=category_name).first()
-        if existing_category:
-            return render_template('add_category.html',error="Category already exist")
-        else:
-            # Create a new category
-            new_category = Category(name=category_name)
-            db.session.add(new_category)
-            db.session.commit()
-            flash("Category added successfully.", 'success')
-            return redirect("/admin/home")
-    return render_template('add_category.html')
-
+    check = Admin.query.filter_by(email=current_user.email).first()
+    if check:
+        if request.method == 'POST':
+            category_name = request.form['category_name']
+            # Check if the category already exists in the database
+            existing_category = Category.query.filter_by(name=category_name).first()
+            if existing_category:
+                return render_template('add_category.html',error="Category already exist")
+            else:
+                # Create a new category
+                new_category = Category(name=category_name)
+                db.session.add(new_category)
+                db.session.commit()
+                flash("Category added successfully.", 'success')
+                return redirect("/admin/home")
+        return render_template('add_category.html')
+    else:
+        return "Access Denied"
 # Add to Cart 
 @app.route("/add_to_cart/<user_id>/<product_id>",methods=["GET","POST"])
 @login_required

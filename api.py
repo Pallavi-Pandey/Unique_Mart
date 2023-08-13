@@ -34,7 +34,6 @@ class Product_api(Resource):
     
     @marshal_with(output)
     def post(self):
-
         data = prod_parser.parse_args()
         print(data.get('product_name'))
         product = Product(product_name=data.get('product_name'), price=data.get('price'), 
