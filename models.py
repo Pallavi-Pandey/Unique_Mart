@@ -4,7 +4,7 @@ from sqlalchemy import DateTime
 from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 from flask_login import UserMixin
-
+from datetime import datetime
 
 class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +23,6 @@ class Admin(db.Model,UserMixin):
     def get_id(self):
         return str(self.id)
 
-
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True, nullable=False)
@@ -41,15 +40,13 @@ class Product(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     category = db.relationship('Category', back_populates='products')
 
-
-
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     quantity = db.Column(db.Integer, default=1)
     bought = db.Column(db.Boolean, default=False)
-    T_time= db.Column(db.Date, nullable=True)
+    T_time = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
 
     user = db.relationship('User', backref='cart_items')
     product = db.relationship('Product', backref='cart_items')

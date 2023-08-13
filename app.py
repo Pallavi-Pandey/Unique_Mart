@@ -130,11 +130,11 @@ def add_category():
 @login_required
 def add_to_cart(user_id,product_id):
     prod=Product.query.filter_by(id=product_id).first()
-    citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
+    citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id,bought=False).first()
     if request.method=="POST":
         if int(request.form['quantity'])>prod.quantity:
             return render_template("add_to_cart.html",prod=prod,user=current_user,mess=f"Sorry! only {prod.quantity} available",citem=citem)
-        citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
+        citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id,bought=False).first()
         if not citem:
             cart=CartItem(user_id=user_id, product_id=product_id, quantity=request.form['quantity'])
             db.session.add(cart)
@@ -151,7 +151,8 @@ def add_to_cart(user_id,product_id):
 def calculate_total(data):
     total=0
     for item in data:
-        total+=item.product.price*item.quantity
+        if not item.bought:
+            total+=item.product.price*item.quantity
     return total
 
 # View Cart 
@@ -168,7 +169,7 @@ def view_cart(user_id):
 @login_required
 def remove_from_cart(pro_id):
     user_id=current_user.id
-    db.session.delete(CartItem.query.filter_by(product_id=pro_id,user_id=user_id).first())
+    db.session.delete(CartItem.query.filter_by(product_id=pro_id,user_id=user_id,bought=False).first())
     db.session.commit()
     return redirect("/view_cart/"+str(user_id))
 
@@ -177,12 +178,14 @@ def remove_from_cart(pro_id):
 @login_required
 def payment():
     user_id = current_user.id 
-    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    cart_items = CartItem.query.filter_by(user_id=user_id,bought=False).all()
     for item in cart_items:
         prod=Product.query.filter_by(id=item.product_id).first()
         prod.quantity-=item.quantity
-
-        db.session.delete(item)
+        item.bought=True
+        item.T_time=datetime.now()
+        # db.session.delete(item)
+        db.session.add(item)
         db.session.add(prod)
         db.session.commit()
     db.session.commit()
@@ -288,6 +291,7 @@ def profile(user_id):
 def summary():
     categories = Category.query.all()
     category_names = [category.name for category in categories]
+    print(category_names)
     product_counts = [len(category.products) for category in categories]
     import os
     photo='static'

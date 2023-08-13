@@ -68,6 +68,8 @@
     <h1>Shopping Cart</h1>
     <div class="cart-items">
         {% for item in cart %}
+        {% if not item.bought %}
+        
         <div class="cart-item">
             <img src="{{item.product.image_link}}" alt="Product Image">
             <div class="item-details">
@@ -78,6 +80,7 @@
             </div>
 
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 

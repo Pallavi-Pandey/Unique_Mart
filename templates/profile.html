@@ -66,14 +66,16 @@
             <th>Purchase Date</th>
         </tr>
         {% for cart_item in user.cart_items %}
+        {% if cart_item.bought %}
         <tr>
             <td>{{ cart_item.id }}</td>
             <td>{{ cart_item.product.product_name }}</td>
-            <td>${{ cart_item.product.price }}</td>
+            <td>{{ cart_item.product.price }}</td>
             <td>{{ cart_item.quantity }}</td>
-            <td>${{ cart_item.product.price * cart_item.quantity }}</td>
-            <td>{{ cart_item.purchase_date }}</td>
+            <td>{{ cart_item.product.price * cart_item.quantity }}</td>
+            <td>{{ cart_item.T_time }}</td>
         </tr>
+        {% endif %}
         {% endfor %}
     </table>
 </body>
