@@ -217,7 +217,9 @@
 
         {% for category in categories %}
         <div class="category-section">
+            {% if category.products %}
             <div class="category-name">{{ category.name }}</div>
+        {% endif %}
             <hr>
             <div class="row">
                 {% for product in products %}
@@ -227,7 +229,7 @@
                         <img src="{{ product.image_link }}" alt="{{ product.product_name }}" width="100">
                         <div class="product-details">
                             <div class="product-name">{{ product.product_name }}</div>
-                            <div class="product-price">Price: ${{ product.price }}</div>
+                            <div class="product-price">Price: {{ product.price }} Rs/Packet</div>
                             {% if product.quantity > 0 %}
                                 <div class="product-quantity">Quantity available: {{ product.quantity }}</div>
                                 <button class="add-to-cart-btn" onclick="location.href='/add_to_cart/{{user.id}}/{{product.id}}'">Add to Cart</button>

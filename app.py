@@ -7,6 +7,8 @@ from datetime import datetime
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from flask_restful import Resource, Api
 from api import *
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 app = Flask(__name__)
@@ -16,16 +18,12 @@ db.init_app(app)
 app.app_context().push()
 app.config['SECRET_KEY'] = 'Pallavi'
 
-
 api = Api(app)
-
 
 api.add_resource(Product_api, '/api/product','/api/product/<string:product_id>')
 api.add_resource(Category_api, '/api/category','/api/category/<string:category_id>')
 api.add_resource(CategoryList,'/api/categories')
 api.add_resource(ProductList,'/api/products')
-
-
 
 with app.app_context():
     db.create_all()
@@ -52,7 +50,7 @@ def admin_home():
     return render_template('admin_home1.html',data=existing_category)
 
 # Delete Category 
-@app.route("/delete_category/<cat_id>", methods=['GET'])
+@app.route("/delete_category/<cat_id>", methods=['GET','POST'])
 @login_required
 def delete_cat(cat_id):
     db.session.delete(Category.query.filter_by(id=cat_id).first())
@@ -135,14 +133,14 @@ def add_to_cart(user_id,product_id):
     citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
     if request.method=="POST":
         if int(request.form['quantity'])>prod.quantity:
-            return render_template("add_to_cart.html",prod=prod,user=current_user,mess="too hot to handle",citem=citem)
+            return render_template("add_to_cart.html",prod=prod,user=current_user,mess=f"Sorry! only {prod.quantity} available",citem=citem)
         citem=CartItem.query.filter_by(product_id=product_id,user_id=user_id).first()
         if not citem:
             cart=CartItem(user_id=user_id, product_id=product_id, quantity=request.form['quantity'])
             db.session.add(cart)
         else:
             if int(request.form['quantity'])+citem.quantity>prod.quantity:
-              return render_template("add_to_cart.html",prod=prod,user=current_user,mess="too hot to handle",citem=citem)
+              return render_template("add_to_cart.html",prod=prod,user=current_user,mess=f"Sorry! only {prod.quantity} available",citem=citem)
             citem.quantity += int(request.form['quantity'])
         db.session.commit()
         return redirect('/all_products?category=all&mess='+"Added to Cart Successfully")
@@ -183,6 +181,7 @@ def payment():
     for item in cart_items:
         prod=Product.query.filter_by(id=item.product_id).first()
         prod.quantity-=item.quantity
+
         db.session.delete(item)
         db.session.add(prod)
         db.session.commit()
@@ -219,7 +218,7 @@ def all_products(mess=None):
         return render_template('all_products.html', products=products, categories=categories,user=current_user,all_categories=all_categories)
     
 # Delete Products
-@app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET'])
+@app.route("/delete_product/<cat_id>/<pro_id>", methods=['GET','POST'])
 @login_required
 def delete_product(cat_id,pro_id):
     db.session.delete(Product.query.filter_by(id=pro_id).first())
@@ -283,11 +282,21 @@ def profile(user_id):
     user_id = current_user
     return render_template("profile.html",user=user_id)
 
+# Summary
 @app.route('/summary')
+@login_required
 def summary():
     categories = Category.query.all()
     category_names = [category.name for category in categories]
     product_counts = [len(category.products) for category in categories]
+    import os
+    photo='static'
+    print (os.listdir(photo))
+    file_path=os.path.join(photo,'bar_chart.png')
+    try:
+        os.remove(file_path)
+    except:
+        pass
     plt.bar(category_names, product_counts)
     plt.xlabel('Category')
     plt.ylabel('Number of Products')

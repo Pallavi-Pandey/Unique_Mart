@@ -71,7 +71,12 @@
                                 {{ category.name }}
                                 <div class="btn-group">
                                     <a href="/edit_category/{{ category.id }}" class="btn btn-sm btn-info">Edit</a>
-                                    <a href="/delete_category/{{ category.id }}" class="btn btn-sm btn-danger">Delete</a>
+                                    
+                                    <!-- Trigger the confirmation modal -->
+                                    <button class="btn btn-sm btn-danger" data-toggle="modal" data-target="#confirmDeleteModal{{ category.id }}">
+                                        Delete
+                                    </button>
+                                    
                                     <a href="/view_category/{{ category.id }}" class="btn btn-sm btn-secondary">View</a>
                                 </div>
                             </li>
@@ -82,6 +87,32 @@
             </div>
         </div>
     </div>
+
+    <!-- Confirmation Modal -->
+    {% for category in data %}
+    <div class="modal fade" id="confirmDeleteModal{{ category.id }}" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    If you delete the category "{{ category.name }}", all items in this category will be deleted. Are you sure you want to continue?
+                </div>
+                <div class="modal-footer">
+                    <!-- Form action for deleting the category -->
+                    <form action="/delete_category/{{ category.id }}" method="post">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+                        <button type="submit" class="btn btn-danger">Yes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 
     <!-- Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
