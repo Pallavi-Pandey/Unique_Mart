@@ -85,7 +85,8 @@ class Category_api(Resource):
     
     @marshal_with(output)
     def post(self):
-        data = prod_parser.parse_args()
+        data = cat_parser.parse_args()
+        print(data)
         print(data.get('name'))
         category = Category(name=data.get('name'))
         db.session.add(category)
@@ -97,7 +98,7 @@ class Category_api(Resource):
         cat = Category.query.filter_by(id=category_id).first()
         db.session.delete(cat)
         db.session.commit()
-        return cat.category_name+" deleted successfuly"
+        return cat.name+" deleted successfuly"
     
     @marshal_with(output)
     def put(self,category_id):

@@ -1,0 +1,227 @@
+openapi: 3.1.0
+info:
+  title: FastAPI
+  version: 0.1.0
+servers:
+  - url: http://127.0.0.1:5600
+paths:
+  /api/product/<string:product_id>:
+    get:
+      summary: Product Api
+      operationId: Product_api_api_product__string_product_id__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    put:
+      summary: Product Api
+      operationId: Product_api_api_product__string_product_id__put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      summary: Product Api
+      operationId: Product_api_api_product__string_product_id__delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/product:
+    post:
+      summary: Product Api
+      operationId: Product_api_api_product_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/category/<string:category_id>:
+    get:
+      summary: Category Api
+      operationId: Category_api_api_category__string_category_id__get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+    put:
+      summary: Category Api
+      operationId: Category_api_api_category__string_category_id__put
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+    delete:
+      summary: Category Api
+      operationId: Category_api_api_category__string_category_id__delete
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/category:
+    post:
+      summary: Category Api
+      operationId: Category_api_api_category_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+  /api/categories:
+    get:
+      summary: Categorylist
+      operationId: CategoryList_api_categories_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+  /api/products:
+    get:
+      summary: Productlist
+      operationId: ProductList_api_products_get
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema: {}
+components:
+  schemas:
+    Category:
+      properties:
+        name:
+          type: string
+          title: Name
+      type: object
+      required:
+        - name
+      title: Category
+    HTTPValidationError:
+      properties:
+        detail:
+          items:
+            $ref: '#/components/schemas/ValidationError'
+          type: array
+          title: Detail
+      type: object
+      title: HTTPValidationError
+    Product:
+      properties:
+        product_name:
+          type: string
+          title: Product Name
+        price:
+          type: integer
+          title: Price
+        quantity:
+          type: integer
+          title: Quantity
+        manufacture_date:
+          type: string
+          format: date-time
+          title: Manufacture Date
+        expiry_date:
+          type: string
+          format: date-time
+          title: Expiry Date
+        category_id:
+          type: integer
+          title: Category Id
+        image:
+          type: string
+          title: Image
+      type: object
+      required:
+        - product_name
+        - price
+        - quantity
+        - manufacture_date
+        - expiry_date
+        - category_id
+        - image
+      title: Product
+    ValidationError:
+      properties:
+        loc:
+          items:
+            anyOf:
+              - type: string
+              - type: integer
+          type: array
+          title: Location
+        msg:
+          type: string
+          title: Message
+        type:
+          type: string
+          title: Error Type
+      type: object
+      required:
+        - loc
+        - msg
+        - type
+      title: ValidationError
